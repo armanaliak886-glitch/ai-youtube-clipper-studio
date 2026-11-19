@@ -188,7 +188,17 @@ app.post("/api/dub", upload.single("video"), async (req, res) => {
     await safeUnlink(input);
   }
 });
+app.get("/", (_req, res) =>
+  res.sendFile(path.join(__dirname, "index.html"))
+);
 
+app.get("/styles.css", (_req, res) =>
+  res.sendFile(path.join(__dirname, "styles.css"))
+);
+
+app.get("/app.js", (_req, res) =>
+  res.sendFile(path.join(__dirname, "app.js"))
+);
 app.use((err, _req, res, _next) => {
   res.status(400).json({ error: err.message || "Request failed." });
 });
