@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090e1b">
+  <title>AI YouTube Clipper Studio</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">✂</span><div><b>AI YouTube Clipper</b><small>STUDIO</small></div></div>
+    <select id="language" aria-label="Language"><option value="hi">हिंदी</option><option value="en">English</option></select>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">GEMINI-POWERED CREATOR TOOLKIT</div>
+      <h1 data-i18n="heroTitle">लंबे वीडियो से शानदार Shorts बनाइए</h1>
+      <p data-i18n="heroSub">वीडियो अपलोड करें या YouTube लिंक का Preview देखें। AI से क्लिप सुझाव, कैप्शन और डबिंग तैयार करें।</p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head"><span class="step">01</span><div><h2 data-i18n="sourceTitle">वीडियो जोड़ें</h2><p data-i18n="sourceSub">अपनी या उपयोग की अनुमति वाली वीडियो फ़ाइल चुनें।</p></div></div>
+      <div class="tabs"><button class="tab active" data-tab="upload" data-i18n="uploadTab">वीडियो अपलोड</button><button class="tab" data-tab="youtube" data-i18n="youtubeTab">YouTube लिंक</button></div>
+      <div id="uploadPane" class="tabpane">
+        <label class="dropzone" for="videoFile"><span class="upload-icon">↑</span><b data-i18n="chooseVideo">वीडियो चुनने के लिए टैप करें</b><small data-i18n="fileTypes">MP4, MOV, WebM या MKV</small><input id="videoFile" type="file" accept="video/mp4,video/quicktime,video/webm,video/x-matroska"></label>
+        <div id="fileName" class="muted">अभी कोई वीडियो नहीं चुना गया।</div>
+        <video id="localPreview" controls playsinline hidden></video>
+      </div>
+      <div id="youtubePane" class="tabpane" hidden>
+        <label class="field-label" for="youtubeUrl" data-i18n="pasteUrl">YouTube URL पेस्ट करें</label>
+        <div class="urlrow"><input id="youtubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=..."><button id="previewBtn" class="primary" data-i18n="preview">Preview</button></div>
+        <div id="ytPreview" class="video-frame muted" data-i18n="ytHelp">लिंक डालकर Preview दबाएँ। YouTube वीडियो यहाँ अपने आधिकारिक प्लेयर में खुलेगा।</div>
+        <p class="notice" data-i18n="ytNotice">YouTube लिंक केवल Preview/AI संदर्भ के लिए है। क्लिप Export करने के लिए अनुमति प्राप्त MP4 अपलोड करें।</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head"><span class="step">02</span><div><h2 data-i18n="aiTitle">AI वीडियो विश्लेषण</h2><p data-i18n="aiSub">Gemini से Shorts के अच्छे हिस्से और captions सुझवाएँ।</p></div></div>
+      <button id="analyzeBtn" class="primary full" data-i18n="analyze">✨ वीडियो Analyze करें</button>
+      <div id="analysisStatus" class="status" aria-live="polite"></div>
+      <div id="analysisResult" hidden>
+        <h3 data-i18n="summary">वीडियो सारांश</h3><p id="summaryText"></p>
+        <h3 data-i18n="clips">Clip सुझाव</h3><div id="clipList" class="clip-list"></div>
+        <h3 data-i18n="transcript">Transcript</h3><textarea id="transcript" rows="5" placeholder="AI transcript..."></textarea>
+        <div class="row-actions"><button id="downloadSrt" class="secondary" data-i18n="downloadSrt">SRT डाउनलोड करें</button></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head"><span class="step">03</span><div><h2 data-i18n="trimTitle">Clip काटें और Export करें</h2><p data-i18n="trimSub">वीडियो फ़ाइल से चुने हुए समय का MP4 बनाएँ।</p></div></div>
+      <div class="two">
+        <label><span data-i18n="start">शुरुआत (सेकंड)</span><input id="clipStart" type="number" min="0" step="0.1" value="0"></label>
+        <label><span data-i18n="end">अंत (सेकंड)</span><input id="clipEnd" type="number" min="0.1" step="0.1" value="30"></label>
+      </div>
+      <button id="clipBtn" class="primary full" data-i18n="exportClip">✂ MP4 Clip Export करें</button>
+      <div id="clipStatus" class="status" aria-live="polite"></div><div id="clipDownload"></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head"><span class="step">04</span><div><h2 data-i18n="dubTitle">AI Dubbing</h2><p data-i18n="dubSub">स्क्रिप्ट को दूसरी भाषा में बदलकर AI आवाज़ बनाएँ।</p></div></div>
+      <label class="field-label" for="dubText" data-i18n="dubText">डबिंग के लिए टेक्स्ट / Transcript</label>
+      <textarea id="dubText" rows="5" placeholder="यहाँ बोलने वाला टेक्स्ट डालें..."></textarea>
+      <label class="field-label" for="targetLanguage" data-i18n="targetLang">आवाज़ की भाषा</label>
+      <select id="targetLanguage" class="wide"><option>Hindi</option><option>English</option><option>Spanish</option><option>French</option><option>Japanese</option></select>
+      <button id="dubBtn" class="primary full" data-i18n="makeDub">🎙 Dubbing Audio बनाएँ</button>
+      <div id="dubStatus" class="status" aria-live="polite"></div><div id="dubResult"></div>
+      <p class="notice" data-i18n="dubNote">यदि वीडियो फ़ाइल चुनी है, तो AI आवाज़ के साथ नया MP4 भी बनाने की कोशिश होगी। यह मूल आवाज़ की जगह नई आवाज़ रखेगा।</p>
+    </section>
+
+    <section class="panel api-panel">
+      <div class="section-head"><span class="step">05</span><div><h2 data-i18n="apiTitle">Google AI Studio API Connector</h2><p data-i18n="apiSub">अपनी Gemini API Key जोड़ें।</p></div></div>
+      <label class="field-label" for="apiKey" data-i18n="apiKey">Gemini API Key</label>
+      <div class="urlrow"><input id="apiKey" type="password" autocomplete="off" placeholder="AIza..."><button id="toggleKey" class="secondary" data-i18n="show">Show</button></div>
+      <div class="row-actions"><button id="testKey" class="secondary" data-i18n="testKey">API जाँचें</button><a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Google AI Studio ↗</a></div>
+      <div id="keyStatus" class="status" aria-live="polite"></div>
+      <p class="notice" data-i18n="keyNote">Key केवल इस ब्राउज़र टैब की मेमोरी में रहती है और हर अनुरोध के साथ सर्वर को भेजी जाती है। इसे GitHub पर कभी अपलोड न करें।</p>
+    </section>
+    <footer>AI YouTube Clipper Studio · Open-source starter project · Use only content you own or have permission to edit.</footer>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
